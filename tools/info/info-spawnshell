@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function info_spawnshell(){
+
+	printf -- "#################\n"
+        printf -- "# SPAWN A SHELL #\n"
+        printf -- "###################################################\n"
+        printf -- "# python3 -c 'import pty;pty.spawn(\"/bin/bash\")'  #\n"
+        printf -- "# python -c 'import pty;pty.spawn(\"/bin/bash\")'   #\n"
+        printf -- "###################################################\n\n"
+
+}
+
+info_spawnshell

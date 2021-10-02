@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function info_sshgeneratersa(){
+
+	printf -- "##### GENERATE RSA KEY ####\n"
+        printf -- "# ssh-keygen -t rsa       #\n"
+        printf -- "#####################################################\n"
+        printf -- "# mv id_rsa authorized_keys                         #\n"
+        printf -- "# chmod 755 .ssh   --> if u created dir right now.. # \n"
+        printf -- "# chmod 600 authorized_keys                         #\n"
+        printf -- "#                                                   #\n"
+        printf -- "# ssh -i authorized_keys void@127.0.0.1             #\n"
+        printf -- "#####################################################\n\n"
+
+}
+
+
+info_sshgeneratersa

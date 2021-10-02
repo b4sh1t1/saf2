@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function info_internalconnections(){
+
+	printf -- "##### SHOW INTERNAL CONNECTIONS AND CONNECT WITH TELNET #####\n"
+        printf -- "# netstat -antp                                             #\n"
+        printf -- "#                                                           #\n"
+        printf -- "# example:                                                  #\n"
+        printf -- "# port 110 is listening                                     #\n"
+        printf -- "# connect with telnet                                       #\n"
+        printf -- "# using credentials                                         #\n"
+        printf -- "# user User1                                                #\n"
+        printf -- "# pass P@ssW0Rd                                             #\n"
+        printf -- "# list and retr                                             #\n"
+        printf -- "#############################################################\n\n"
+
+}
+
+info_internalconnections

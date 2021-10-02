@@ -1,0 +1,261 @@
+#!/bin/bash
+
+if [ $(id -u) != "0" ];
+then
+        printf -- "This program needs root privilege to run\n"
+        exit
+fi
+
+
+function _header(){
+
+printf -- "\n"
+printf -- "\e[1;31m"
+
+cat <<EOF
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢤⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡾⠿⢿⡀⠀⠀⠀⠀⣠⣶⣿⣷⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣦⣴⣿⡋⠀⠀⠈⢳⡄⠀⢠⣾⣿⠁⠈⣿⡆⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⠿⠛⠉⠉⠁⠀⠀⠀⠹⡄⣿⣿⣿⠀⠀⢹⡇⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⣾⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⣰⣏⢻⣿⣿⡆⠀⠸⣿⠀⠀⠀
+⠀⠀⠀⢀⣴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣆⠹⣿⣷⠀⢘⣿⠀⠀⠀
+⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⠋⠉⠛⠂⠹⠿⣲⣿⣿⣧⠀⠀
+⠀⢠⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣿⣿⣿⣷⣾⣿⡇⢀⠀⣼⣿⣿⣿⣧⠀
+⠰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⡘⢿⣿⣿⣿⠀
+⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⣷⡈⠿⢿⣿⡆
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠁⢙⠛⣿⣿⣿⣿⡟⠀⡿⠀⠀⢀⣿⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣶⣤⣉⣛⠻⠇⢠⣿⣾⣿⡄⢻⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣦⣤⣾⣿⣿⣿⣿⣆⠁
+
+EOF
+
+printf -- "\e[0m\n"
+
+}
+
+function _scripts_header(){
+
+	printf "\e[1msaf2\e[0m framework v0.2 by -- 0bfxGH0ST*\n"
+	scanners=$(ls "$localpath"scanners | wc -l)
+	exploits=$(ls "$localpath"exploits | wc -l)
+	decoders=$(ls "$localpath"decoders | wc -l)
+	stego=$(ls "$localpath"stego | wc -l)
+	autogen=$(ls "$localpath"auto-gen_reversetcp | wc -l)
+	encoders=$(ls "$localpath"encoders | wc -l)
+	webscrappers=$(ls "$localpath"webscrappers | wc -l)
+	post_explotation=$(ls "$localpath"post_explotation | wc -l)
+	printf "scanners: $scanners       encoders: $encoders\n"
+	printf "shell gen: $autogen     decoders: $decoders\n"
+	printf "exploits: $exploits       stego: $stego\n"
+	printf "webscrappers: $webscrappers   post explotation: $post_explotation\n"
+	printf "\n"
+	printf "\e[0;32mTip\e[0m: Type \e[4mhelp\e[0m to start\n\n"
+
+}
+
+function _internal_help(){
+
+	printf "\nCommands:\n\n"
+	printf "shell gen                    List available backdoor generators\n"
+	printf "decoders                     List available decoders\n"
+	printf "encoders                     List available encoders\n"
+	printf "exploits                     List available exploits\n"
+	printf "post explotation             List available post explotation scripts\n"
+	printf "scanners                     List available scanners\n"
+	printf "stego                        List available steganography programs\n"
+	printf "webscrappers                 List available webscrappers\n\n"
+	printf "info                         Print usefull information about how machines are usually defeated\n"
+	printf "info etc passwd abuse        Print /etc/passwd abuse tecnique\n"
+	printf "info find by privilege       Print find command method to find privileges\n"
+	printf "info internal connections    Print how an internal connection can be used to gain information\n"
+	printf "info privesc                 Print privilege escalation tecniques\n"
+	printf "info spawn tty shell         Print how to spawn a python tty shell\n"
+	printf "info ssh generate rsa        Print how generate ssh rsa key\n"
+	printf "info wpscan                  Print some wpscan usefull commands\n\n"
+	printf "set listener                 Set listener to receives reverse tcp connections (set listener 1337)\n\n"
+	printf "delete history               Delete program history (Requires program re-run)\n\n"
+
+}
+
+function sa_pseudo_console(){
+
+	history -s -- "$sa_interactive_console" 2>/dev/null
+	history -w /tmp/.saf2_history
+
+	printf "\e[1m"
+	read -e -r -p 'saf2 > ' sa_interactive_console
+	printf "\e[0m"
+
+}
+
+
+####################### external arg help ######################
+for args in "$@"
+do
+        if [ "$args" == "-h" ] || [ "$args" == "--help" ]
+        then
+		_header
+		_scripts_header
+                exit
+        fi
+done
+################################################################
+
+########## SYSTEM PATHS ###########################################
+localpath="/opt/saf2/tools/"
+###################################################################
+
+_header
+_scripts_header
+
+history -r /tmp/.saf2_history
+
+##################################### MAIN PROGRAM ############################
+
+
+while [ "$sa_interactive_console" != "exit" ]
+do
+
+	sa_pseudo_console
+
+	if [[ "$sa_interactive_console" == "cd"* ]];
+	then
+		cd_folder=$(printf -- "$sa_interactive_console" | awk '{for (i=2; i<=NF; i++) print $i}')
+		#### variable as a new PWD ##
+		export personal_PWD="$cd_folder"
+		cd $cd_folder
+
+	elif [[ "$sa_interactive_console" == "saf2" ]]
+        then
+                _header
+		_scripts_header
+
+	elif [[ "$sa_interactive_console" == "help" ]]
+        then
+		_internal_help
+
+        elif [[ "$sa_interactive_console" == "delete history" ]]
+        then
+		printf "*WARNING* This feature requires re-run saf2 to avoid errors\n"
+		bash -c "rm -r /tmp/.saf2_history"
+		exit
+		printf "Deleting saf2 history\n"
+
+	elif [[ "$sa_interactive_console" == "scanners" ]]
+	then
+		printf "\n[\e[0;32m+\e[0m] Available Scanners\n\n"
+		ls --format single-column "$localpath"scanners
+		printf "\n"
+
+	elif [[ "$sa_interactive_console" == "exploits" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Exploits\n\n"
+                ls --format single-column "$localpath"exploits
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "decoders" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Decoders\n\n"
+                ls --format single-column "$localpath"decoders
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "encoders" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Encoders\n\n"
+                ls --format single-column "$localpath"encoders
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "stego" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Stego\n\n"
+                ls --format single-column "$localpath"stego
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "shell gen" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Auto-generator reverse tcp shell\n\n"
+                ls --format single-column "$localpath"auto-gen_reversetcp
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "webscrappers" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Webscrappers\n\n"
+                ls --format single-column "$localpath"webscrappers
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "post explotation" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Available Post Explotation\n"
+        	printf "Post explotation scripts are stored in /opt/saf2/tools/post_explotation/\n\n"
+	        ls --format single-column "$localpath"post_explotation
+                printf "\n"
+
+        elif [[ "$sa_interactive_console" == "info" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-etcpasswdabuse
+		bash "$localpath"info/info-findbyprivilege
+		bash "$localpath"info/info-internalconnections
+		bash "$localpath"info/info-privesctec
+		bash "$localpath"info/info-spawnshell
+		bash "$localpath"info/info-sshgeneratersa
+		bash "$localpath"info/info-wpscan
+                printf "\n"
+
+        elif [[ "$sa_interactive_console" == "info etc passwd abuse" ]]
+        then
+		printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+		bash "$localpath"info/info-etcpasswdabuse
+		printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info find by privilege" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-findbyprivilege
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info internal connections" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-internalconnections
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info privesc" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-privesctec
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info spawn tty shell" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-spawnshell
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info ssh generate rsa" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-sshgeneratersa
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "info wpscan" ]]
+        then
+                printf "\n[\e[0;32m+\e[0m] Info about\n\n"
+                bash "$localpath"info/info-wpscan
+                printf "\n"
+
+	elif [[ "$sa_interactive_console" == "set listener"* ]]
+        then
+		lport=$(printf "$sa_interactive_console" | awk '{print $3}')
+		bash -c "nc -lvp \"$lport\""
+		
+	else
+		printf "\n"
+		bash -c "$sa_interactive_console"
+		printf "\n"
+	fi
+
+done
+
+########################## END OF MAIN PROGRAM ##############################

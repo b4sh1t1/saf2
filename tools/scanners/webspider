@@ -1,0 +1,244 @@
+#!/bin/bash
+
+###########################################################################################################
+function _HELP(){
+	printf -- "WEBSPIDER v0.1\n"
+	printf -- "Automated Nmap Scan, Find WebService by tags http and https, FTP anonymous login, SMBMAP,\n"
+	printf -- "MYSQL connection default creds, DIRB shell wordlist=common, WPSCAN and SQLmap\n\n"
+	printf -- "Usage webspider <host>\n"
+	printf -- "-h               --help           Show help\n\n"
+	printf -- "If server hasn't http or https tag will not detected as a web service\n"
+	printf -- "and then you'll need scan it manually\n"
+}
+###########################################################################################################
+
+function header(){
+printf "\e[0;31m"
+cat << EOF
+
+           ;               ,           
+         ,;                 '.         
+        ;:                   :;        
+       ::                     ::       
+       ::                     ::       
+       ':                     :        
+        :.                    :        
+     ;' ::                   ::  '     
+    .'  ';                   ;'  '.    
+   ::    :;                 ;:    ::   
+   ;      :;.             ,;:     ::   
+   :;      :;:           ,;"      ::   
+   ::.      ':;  ..,.;  ;:'     ,.;:   
+    "'"...   '::,::::: ;:   .;.;""'    
+        '"""....;:::::;,;.;"""         
+    .:::.....'"':::::::'",...;::::;.   
+   ;:' '""'"";.,;:::::;.'""""""  ':;   
+  ::'         ;::;:::;::..         :;  
+ ::         ,;:::::::::::;:..       :: 
+ ;'     ,;;:;::::::::::::::;";..    ':.
+::     ;:"  ::::::"""'::::::  ":     ::
+ :.    ::   ::::::;  :::::::   :     ; 
+  ;    ::   :::::::  :::::::   :    ;  
+   '   ::   ::::::....:::::'  ,:   '   
+    '  ::    :::::::::::::"   ::       
+       ::     ':::::::::"'    ::       
+       ':       """""""'      ::       
+        ::                   ;:        
+        ':;                 ;:"        
+          ';              ,;'          
+            "'           '"            
+              '
+EOF
+printf "\e[0m"
+}
+
+
+##############################################################
+for args in "$@";
+do
+	if [[ "$args" == "-h" ]] || [[ "$args" == "--h" ]];
+	then
+		_HELP
+		exit
+	fi
+done
+##############################################################
+
+########### PATH TMP and CREATE DIR ###########
+tmp_dir="/tmp/temporary/"
+portscan_file="/tmp/temporary/portscan.txt"
+target_host="$1"
+hardcoded_wordlist="/usr/share/dirb/wordlists/common.txt"
+rm -r "$tmp_dir" 2>/dev/null
+mkdir "$tmp_dir" 2>/dev/null
+###############################################
+
+header
+
+####################### Nmap scan #########################
+if [[ "$1" == *"."* ]];
+then
+	printf "%s\n"
+	nmap -T4 -A "$1" -p- --min-rate 1000 -o "$portscan_file"
+else
+	_HELP
+	exit
+fi
+###########################################################
+
+
+
+#### CHECK IF NO PORTS OPEN AND EXITING
+
+if [[ $(grep 'All 65535 scanned ports on *.* are closed' "$portscan_file") == "All 65535 scanned ports on"*"are closed" ]];
+then
+        printf "\n\nAll ports are closed\n"
+        exit
+fi
+
+########################################
+
+################## FINDING FTP WITH ANONYMOUS LOGIN ######################
+find_ftp_anon=$(cat "$portscan_file" | grep "ftp\|anon\|Anonymous")
+##########################################################################
+
+##################################### FINDING MYSQL PORTS ######################################
+mysql_ports=$(cat "$portscan_file" | grep "open" | grep "mysql" | awk -F'/' '{print $1}')
+################################################################################################
+
+#################### MYSQL FUNCTION TO CHECK ALL PORTS RUNNING MYSQL ###############################
+#
+function _mysql_loop(){
+	for j in $mysql_ports
+	do
+		printf "\nMYSQL default config with this parameters (\'$target_host:$j\','root','','mysql')\n"
+		printf "$target_host:$j\n"
+		############################ PHP SCRIPT ONE LINE TO CHECK DEFAULT CREDENTIALS CONNECTION TO MYSQL DATABASE <HOST>,'root','','mysql' #######################
+		php -r "\$db = mysqli_connect(\"$target_host:$j\",'root','','mysql');if (\$db){	echo(\"[*]Connection stablished with default config[*]\" . \"\n\");}else{	echo(\"Cant connect...\" . \"\n\");};" 2> /dev/null
+		###########################################################################################################################################################
+		printf "\n\n"
+	done
+	printf "\n"
+}
+#
+######################################################################################################
+
+
+
+############# FINDING THE WEB SERVERS ######################################################
+
+find_open=$(cat "$portscan_file" | grep "open" | grep -v "|")
+#### redundant but necesary to show only web services in screen
+find_webservice=$(cat "$portscan_file" | grep "open" | grep "http" | grep -v "|")
+###
+
+if [[ "$find_open" == *"http"* ]];
+then
+	printf -- "\n[\e[0;32m*\e[0m] Target host: $target_host"
+
+
+	http_ports=$(printf "$find_open" | grep "http")
+
+	websrv_port=$(printf "$http_ports" | awk -F'/' '{print $1}')
+
+	printf -- "\n[\e[0;33m*\e[0m] Open ports:\n\n"
+	printf -- "\e[0;33m$find_open\e[0m\n\n"
+	printf -- "\n\n"
+	printf -- "[\e[0;33m*\e[0m] MYSQL DEFAULT CONNECTION TEST (Ignore empty result)\n"
+	printf -- "\e[0;32m\n"
+	_mysql_loop
+	printf -- "\e[0m\n"
+	printf -- "\n\n"
+
+	########################################################################
+	printf -- "[\e[0;33m*\e[0m] SMBMAP\n"
+	### SMBMAP ####
+	smbmap -H "$1" 2>&1 | tee "$tmp_dir$target_host.smbmap.txt"
+	###############
+	printf -- "\n"
+	### SMBCLIENT ###
+	# this is to connect if you know some credentials...lets give a try
+	#
+	# \\\\192.168.1.54\\Anonymous
+	#
+	#################
+	#########################################################################
+
+
+	printf -- "\n[\e[0;33m*\e[0m] FTP Anonymous login test (Ignore empty result)\n"
+	printf -- "\e[0;32m$find_ftp_anon\e[0m\n\n"
+	printf -- "\n[\e[0;32m+\e[0m] Web services found\n"
+	printf -- "$find_webservice\n\n"
+
+
+	################ READY LOOP FOR ATTACK WEB SERVICES ################
+	#
+	for i in $websrv_port
+	do
+		printf "[\e[0;33m*\e[0m] Programed tasks:\n"
+		printf "dirb with $hardcoded_wordlist wordlist\n"
+		printf "wpscan\n"
+		printf "sqlmap\n"
+		###################################################
+                dirb http://"$target_host:$i" "$hardcoded_wordlist" -o "$tmp_dir$target_host:$i.common.txt"
+		###################################################
+		#dirbuster -u http://"$target_host:$i" -l /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -r "$tmp_dir$target_host:$i.medium.txt" &
+		####################################################
+		wpscan -e vp,vt,u --url http://"$target_host:$i" -o "$tmp_dir$target_host:$i.wpscan.txt"
+		#####################################################
+		sqlmap -u http://"$target_host:$i" --dbs --batch
+		sqlmap -u http://"$target_host:$i/index.php?id=1" --dbs --batch
+		####################################################
+		printf -- "\n\n"
+		### CAT SHOWING RESULTS ON SCREEN
+		printf "Result common wordlist ($hardcoded_wordlist) for $target_host:$i\n"
+		cat "$tmp_dir$target_host:$i.common.txt" | grep "DIRECTORY\|+" | sort >> "$tmp_dir$target_host:$i.interestingdirs.txt"
+
+		printf "Result common wordlist for $target_host:$i\n"
+		cat "$tmp_dir$target_host:$i.wpscan.txt"
+	done
+
+	printf -- "\n[\e[0;32m+\e[0m] WEBSPIDER RESUME\n\n"
+	header
+	printf -- "[\e[0;33m*\e[0m] Nmap scan\n"
+	cat "$portscan_file"
+	printf -- "\n"
+	printf -- "[\e[0;32m+\e[0m] Open ports\n"
+	printf -- "\e[0;32m$find_open\e[0m\n"
+	printf -- "\n"
+
+	printf -- "[\e[0;33m*\e[0m] SMBMAP\n"
+        ### SMBMAP ####
+        cat "$tmp_dir$target_host.smbmap.txt"
+        ###############
+        printf -- "\n"
+
+
+	################################## PRINTF FTP ANON LOGIN? ##############
+	printf -- "\n[\e[0;33m*\e[0m] FTP Anonymous login test (Ignore empty result)\n"
+	printf -- "\e[0;32m$find_ftp_anon\e[0m\n"
+	printf -- "\n"
+	##################################################################
+	#################################
+	printf "\n[\e[0;33m*\e[0m] MYSQL default connection result (Ignore empty result)\n"
+	_mysql_loop
+	printf "\n\n"
+	##################################################################
+	printf -- "[\e[0;32m+\e[0m] Open Web Services\n"
+	printf -- "\e[0;32m$find_webservice\e[0m\n"
+	printf "\n"
+	printf -- "[\e[0;32m+\e[0m] Directories found in Web Services with $hardcoded_wordlist wordlist\n"
+	printf -- "\e[0;32m"
+	cat "$tmp_dir$target_host"*.interestingdirs.txt
+	printf -- "\e[0m"
+	#
+	###################################################################################### END OF WEB SERVICES ################
+
+else
+
+	printf -- "\n[\e[0;32m*\e[0m] Target host: $target_host"
+	printf "\n[\e[0;31m-\e[0m] No http or https webserver was found, but something could be found:\n\n"
+	printf "$find_open\n"
+	printf "\n"
+
+fi
